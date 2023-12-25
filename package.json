@@ -1,6 +1,6 @@
 {
     "name": "tiny-localstorage-db",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "main": "src/tiny-localstorage-db.js",
     "scripts": {
       "test": "node test/test.js"

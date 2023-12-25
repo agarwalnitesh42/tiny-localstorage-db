@@ -1,8 +1,8 @@
-// Import the lz-string library
 const LZString = require('lz-string');
 const BatchOperations = require('./batch-operations');
 const UsageStatistics = require('./usage-statistics');
 const QueryLanguage = require('./query-language');
+const Encryption = require('./encryption'); // Import the Encryption class
 
 // tiny-localstorage-db.js
 class TinyLocalStorageDB extends BatchOperations {
@@ -13,6 +13,7 @@ class TinyLocalStorageDB extends BatchOperations {
     this.lruCache = [];
     this.usageStatistics = new UsageStatistics();
     this.queryLanguage = new QueryLanguage();
+    this.encryption = new Encryption(options.secretKey || 'defaultSecretKey'); // Create an instance of Encryption
   }
 
   // Execute a SELECT query using the Query Language
@@ -26,35 +27,38 @@ class TinyLocalStorageDB extends BatchOperations {
     return this.queryLanguage.select(dataArray, conditions);
   }
 
-  set(key, value, compress = true) {
+  set(key, value, compress = true, encrypt = true) {
     // Compress data if requested
     const serializedValue = compress ? this.compress(value) : JSON.stringify(value);
 
+    // Encrypt data if requested
+    const encryptedData = encrypt ? this.encryption.encrypt(serializedValue) : serializedValue;
+
     // Ensure data size does not exceed maxSize
-    this.enforceSizeLimit(serializedValue.length);
+    this.enforceSizeLimit(encryptedData.length);
 
     // Save data along with timestamp
-    localStorage.setItem(this.getStorageKey(key), JSON.stringify({ value: serializedValue, timestamp: Date.now() }));
+    localStorage.setItem(this.getStorageKey(key), JSON.stringify({ value: encryptedData, timestamp: Date.now() }));
 
     // Update LRU cache
     this.updateLRUCache(key);
-
-    // Track usage statistics
-    this.usageStatistics.trackUsage(key);
   }
 
-  get(key, decompress = true) {
-    // Retrieve data based on the key
+  get(key, decompress = true, decrypt = true) {
     const storageKey = this.getStorageKey(key);
     const storedData = localStorage.getItem(storageKey);
 
     if (storedData) {
-      // If data exists, parse it and update the timestamp for LRU cache
       const { value, timestamp } = JSON.parse(storedData);
+
+      // Update timestamp for LRU cache
       this.updateLRUCache(key);
 
+      // Decrypt data if requested
+      const decryptedValue = decrypt ? this.encryption.decrypt(value) : value;
+
       // Decompress data if requested
-      return decompress ? this.decompress(value) : JSON.parse(value);
+      return decompress ? this.decompress(decryptedValue) : JSON.parse(decryptedValue);
     }
 
     return null;

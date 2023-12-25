@@ -4,12 +4,12 @@ A lightweight and flexible JavaScript library for managing a local database usin
 
 ## Installation
 
-```bash
+```
 npm install tiny-localstorage-db
 ```
 
 ## Usage
-```bash
+```
 // Import the TinyLocalStorageDB class
 const TinyLocalStorageDB = require('tiny-localstorage-db');
 
@@ -58,50 +58,50 @@ console.log(timestampQueryResult);
 
 ## API Documentation
 
-```bash set(key, value, compress = true) ```
+``` set(key, value, compress = true) ```
 Sets a key-value pair in the database.
 
 key: The key for the data.
 value: The value to be stored.
 compress: Optional. If set to true (default), the data will be compressed before storage.
 
-```bash get(key, decompress = true) ```
+``` get(key, decompress = true) ```
 Retrieves the value associated with the given key from the database.
 
 key: The key to look up.
 decompress: Optional. If set to true (default), the retrieved data will be decompressed.
 
-```bash remove(key) ```
+``` remove(key) ```
 Removes the key-value pair associated with the given key from the database.
 
 key: The key to remove.
 
-```bash batchSet(dataArray, compress = true) ```
+``` batchSet(dataArray, compress = true) ```
 Sets multiple key-value pairs in the database using an array of objects.
 
 dataArray: An array of objects, each containing a key and value.
 compress: Optional. If set to true (default), the data will be compressed before storage.
 
-```bash batchGet(keysArray, decompress = true) ```
+``` batchGet(keysArray, decompress = true) ```
 Retrieves values for multiple keys from the database.
 
 keysArray: An array of keys to retrieve.
 decompress: Optional. If set to true (default), the retrieved data will be decompressed.
 
-```bash batchRemove(keysArray) ```
+``` batchRemove(keysArray) ```
 Removes multiple key-value pairs from the database.
 
 keysArray: An array of keys to remove.
 
-```bash selectQuery(conditions) ```
+``` selectQuery(conditions) ```
 Executes a SELECT query on the database using the Query Language.
 
 conditions: An array of conditions for the query. Each condition is an object with key, operator, and value.
 
-```bash executeQuery(key, value) ```
+``` executeQuery(key, value) ```
 Deprecated. Use selectQuery for executing queries.
 
-```bash usageStatistics.getUsageCount(key) ```
+``` usageStatistics.getUsageCount(key) ```
 Gets the usage count for a specific key in the database.
 
 key: The key to get the usage count for.
